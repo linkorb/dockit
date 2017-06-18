@@ -9,7 +9,8 @@ use RuntimeException;
 
 class DockIt
 {
-    protected $path;
+    protected $appPath;
+    protected $deploymentPath;
     protected $apps=[];
     protected $hosts=[];
     protected $deployments=[];
@@ -17,13 +18,23 @@ class DockIt
     protected $username;
     protected $privateKey;
 
-    public function setPath($path)
+    public function setAppPath($path)
     {
-        $this->path = $path;
+        $this->appPath = $path;
     }
-    public function getPath()
+    public function getAppPath()
     {
-        return $this->path;
+        return $this->appPath;
+    }
+
+
+    public function setDeploymentPath($path)
+    {
+        $this->deploymentPath = $path;
+    }
+    public function getDeploymentPath()
+    {
+        return $this->deploymentPath;
     }
 
     public function setUsername($username)

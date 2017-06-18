@@ -16,8 +16,8 @@ class ConfigLoader
     public function loadApps($dockIt)
     {
         $parser = new YamlParser();
-        $path = $dockIt->getPath();
-        $files = glob($path . '/apps/*/dapp.yml');
+        $path = $dockIt->getAppPath();
+        $files = glob($path . '/*/dapp.yml');
         foreach ($files as $filename) {
             $path = dirname($filename);
             $app = new App();
@@ -35,8 +35,8 @@ class ConfigLoader
     public function loadDeployments($dockIt)
     {
         $parser = new YamlParser();
-        $path = $dockIt->getPath();
-        $files = glob($path . '/deployments/*.yml');
+        $path = $dockIt->getDeploymentPath();
+        $files = glob($path . '/*.yml');
         foreach ($files as $filename) {
             //$path = dirname($filename);
             $data = $parser->parse(file_get_contents($filename));

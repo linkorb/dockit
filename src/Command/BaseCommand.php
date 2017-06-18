@@ -19,8 +19,8 @@ abstract class BaseCommand extends Command
     public function init(InputInterface $input, OutputInterface $output)
     {
         $this->dockIt = new DockIt();
-        $path = __DIR__ . '/../../example';
-        $this->dockIt->setPath($path);
+        $this->dockIt->setAppPath(getenv('DOCKIT_APPS'));
+        $this->dockIt->setDeploymentPath(getenv('DOCKIT_DEPLOYMENTS'));
         $this->dockIt->setUsername(getenv('DOCKIT_USERNAME'));
         $this->dockIt->setPrivateKey(getenv('DOCKIT_PRIVATE_KEY'));
 
