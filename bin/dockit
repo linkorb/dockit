@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
+
+// Running as `bin/dockit`
+$loader = __DIR__ . '/../vendor/autoload.php';
+
+if (!file_exists($loader)) {
+    // Running as `vendor/bin/dockit`
+    $loader = __DIR__ . '/../../../autoload.php';
+}
+
+if (!file_exists($loader)) {
+    die(
+        'You must set up the project dependencies, run the following commands:' . PHP_EOL .
+        'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
+        'php composer.phar install' . PHP_EOL
+    );
+}
+
+$autoLoader = require($loader);
+
+if (class_exists('AutoTune\Tuner')) {
+    \AutoTune\Tuner::init($autoLoader);
+}
+
+$envFilename = '.env';
+if (file_exists($envFilename)) {
+    $dotenv = new Dotenv();
+    $dotenv->load($envFilename);
+}
+
+$application = new Application();
+$application->add(new \DockIt\Command\ShowCommand());
+$application->add(new \DockIt\Command\DeploymentInstallCommand());
+$application->run();
