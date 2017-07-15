@@ -21,6 +21,12 @@ Dockit will:
 
 Copy the provided `.env.dist` to `.env` and change the parameters to your preferences.
 
+Dockit will try to read `.env` from the local directory, or otherwise from `~/.dockit`
+
+## Usage:
+
+Run `dockit show` to show the current configuration, and list all apps and deployments at your disposal.
+
 
 ## Examples
 

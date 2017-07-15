@@ -32,7 +32,15 @@ if (file_exists($envFilename)) {
     $dotenv->load($envFilename);
 }
 
+$envFilename = getenv('HOME') . '/.dockit';
+if (file_exists($envFilename)) {
+    $dotenv = new Dotenv();
+    $dotenv->load($envFilename);
+}
+
+
 $application = new Application();
 $application->add(new \DockIt\Command\ShowCommand());
 $application->add(new \DockIt\Command\DeploymentInstallCommand());
+$application->add(new \DockIt\Command\DeploymentDiffCommand());
 $application->run();
