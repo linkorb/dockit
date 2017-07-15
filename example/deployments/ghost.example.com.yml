@@ -1,0 +1,6 @@
+---
+ghost.example.web:
+  host: ghost.example.web
+  app: ghost
+  parameters:
+    GHOST_PORT_HTTP: 8888

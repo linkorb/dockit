@@ -1,0 +1,8 @@
+---
+name: ghost
+description: Ghost is a simple, powerful publishing platform that allows you to share your stories with the world
+
+parameters:
+  GHOST_PORT_HTTP:
+    description: HTTP port
+    default: 80
