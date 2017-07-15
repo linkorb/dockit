@@ -9,22 +9,22 @@ class ConfigLoader
 {
     public function load($dockIt)
     {
-        $this->loadApps($dockIt);
+        $this->loadApps($dockIt, __DIR__ . '/../../apps');
+        $this->loadApps($dockIt, $dockIt->getAppPath());
         $this->loadDeployments($dockIt);
     }
 
-    public function loadApps($dockIt)
+    public function loadApps($dockIt, $path)
     {
         $parser = new YamlParser();
-        $path = $dockIt->getAppPath();
-        $files = glob($path . '/*/dapp.yml');
+        $files = glob($path . '/*/dockit.yml');
         foreach ($files as $filename) {
             $path = realpath(dirname($filename));
             $app = new App();
             $app->setName(basename($path));
             $app->setLocalPath($path);
 
-            $data = $parser->parse(file_get_contents($path . '/dapp.yml'));
+            $data = $parser->parse(file_get_contents($path . '/dockit.yml'));
             if (isset($data['description'])) {
                 $app->setDescription($data['description']);
             }
