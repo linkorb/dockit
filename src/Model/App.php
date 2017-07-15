@@ -5,6 +5,8 @@ namespace DockIt\Model;
 class App
 {
     protected $name;
+    protected $description;
+    protected $localPath;
     protected $parameters = [];
 
     public function setName($name)
@@ -16,7 +18,14 @@ class App
         return $this->name;
     }
 
-    private $localPath;
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
     public function setLocalPath($path)
     {

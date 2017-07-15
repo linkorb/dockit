@@ -19,12 +19,15 @@ class ConfigLoader
         $path = $dockIt->getAppPath();
         $files = glob($path . '/*/dapp.yml');
         foreach ($files as $filename) {
-            $path = dirname($filename);
+            $path = realpath(dirname($filename));
             $app = new App();
             $app->setName(basename($path));
             $app->setLocalPath($path);
 
             $data = $parser->parse(file_get_contents($path . '/dapp.yml'));
+            if (isset($data['description'])) {
+                $app->setDescription($data['description']);
+            }
             if (isset($data['parameters'])) {
                 $app->setParameters($data['parameters']);
             }

@@ -59,10 +59,19 @@ class DockIt
     {
         $this->apps[$app->getName()] = $app;
     }
+    public function getApps()
+    {
+        return $this->apps;
+    }
 
     public function addDeployment(Deployment $deployment)
     {
         $this->deployments[$deployment->getName()] = $deployment;
+    }
+
+    public function getDeployments()
+    {
+        return $this->deployments;
     }
 
     public function ensureHostByName($name)
