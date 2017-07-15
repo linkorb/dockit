@@ -27,6 +27,11 @@ Dockit will try to read `.env` from the local directory, or otherwise from `~/.d
 
 Run `dockit show` to show the current configuration, and list all apps and deployments at your disposal.
 
+## Diffs
+
+Before running a new `deployment:install`, you can check the differences that are going to be applied
+using the `deployment:diff` command.
+This command uses the `colordiff` CLI command, which needs to be installed through your package manager (i.e. `brew install colordiff`, `apt-get install colordiff`, etc)
 
 ## Examples
 

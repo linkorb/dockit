@@ -2,6 +2,7 @@
 
 namespace DockIt\Model;
 
+use Symfony\Component\Process\Process;
 use RuntimeException;
 
 class Deployment
@@ -161,9 +162,49 @@ class Deployment
                 if ($res->getExitCode()!=0) {
                     throw new RuntimeException("Failed to copy $filename");
                 }
-                // echo($res->getOutput(). "\n");
-                // echo($res->getErrorOutput(). "\n");
-                // echo("Exit: " .$res->getExitCode() . "\n");
+            }
+        }
+    }
+
+
+    public function diffAppFiles($output)
+    {
+        $host = $this->getHost();
+        $scp = $host->getScp();
+
+        $source = $this->getApp()->getLocalPath();
+        $dest = $this->getRemotePath();
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                $dir = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+            } else {
+                $filename = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+                $output->writeLn("<comment>Comparing " . $item . "</comment>");
+
+                $tmpfile = tempnam('/tmp', 'dockit-');
+
+                $res = $scp->copy(
+                    $scp->getRemotePath($filename),
+                    $tmpfile
+                );
+                if ($res->getExitCode()!=0) {
+                    $output->writeln("<comment>NEW FILE: $filename</comment>");
+                } else {
+                    $remoteContent = file_get_contents($tmpfile);
+                    $localContent = file_get_contents($item);
+
+                    $process = new Process('colordiff -U3 -w ' . $tmpfile . ' ' . $item);
+                    $process->run();
+                    echo $process->getOutput();
+                    echo $process->getErrorOutput();
+                    unlink($tmpfile);
+                }
             }
         }
     }
