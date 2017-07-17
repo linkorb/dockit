@@ -51,7 +51,9 @@ class ConfigLoader
                 $deployment->setApp($app);
                 $host = $dockIt->ensureHostByName($config['host']);
                 $deployment->setHost($host);
-                $deployment->setParameters($config['parameters']);
+                if (isset($config['parameters'])) {
+                    $deployment->setParameters($config['parameters']);
+                }
 
 
 
