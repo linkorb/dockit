@@ -25,7 +25,12 @@ Dockit will try to read `.env` from the local directory, or otherwise from `~/.d
 
 ## Usage:
 
-Run `dockit show` to show the current configuration, and list all apps and deployments at your disposal.
+* `dockit config` show dockit configuration (search paths to deployments, apps, etc)
+* `dockit app:list` list available apps
+* `dockit app:show [name]` show configuration details for the specified app
+* `dockit deployment:list` list configured deployments
+* `dockit deployment:diff` compare existing remote files agains the to-be-written file contents
+* `dockit deployment:install` generate all the required remote files, and create the `.env` file
 
 ## Diffs
 
