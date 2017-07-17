@@ -153,12 +153,22 @@ class Deployment
                 $this->ensureRemotePath(DIRECTORY_SEPARATOR . $iterator->getSubPathName());
             } else {
                 $filename = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-                echo "Copying " . $filename . "\n";
+                echo "Writing " . $host->getUsername() . '@' . $host->getName() . ':' . $filename . "\n";
+
+                $content = file_get_contents($item);
+                $tmpfile = tempnam('/tmp', 'dockit-template-');
+                if (basename($item)!='docker-compose.yml') {
+                    foreach ($this->parameters as $key => $value) {
+                        $content = str_replace('${' . $key . '}', $value, $content);
+                    }
+                }
+                file_put_contents($tmpfile, $content);
 
                 $res = $scp->copy(
-                    $item,
+                    $tmpfile,
                     $scp->getRemotePath($filename)
                 );
+                unlink($tmpfile);
                 if ($res->getExitCode()!=0) {
                     throw new RuntimeException("Failed to copy $filename");
                 }
@@ -188,18 +198,27 @@ class Deployment
                 $output->writeLn("<comment>Comparing " . $item . "</comment>");
 
                 $tmpfile = tempnam('/tmp', 'dockit-');
+                $tmpfile2 = tempnam('/tmp', 'dockit-template-');
 
                 $res = $scp->copy(
                     $scp->getRemotePath($filename),
                     $tmpfile
                 );
                 if ($res->getExitCode()!=0) {
-                    $output->writeln("<comment>NEW FILE: $filename</comment>");
+                    $output->writeln("<info>NEW FILE: $filename</info>");
                 } else {
                     $remoteContent = file_get_contents($tmpfile);
                     $localContent = file_get_contents($item);
 
-                    $process = new Process('colordiff -U3 -w ' . $tmpfile . ' ' . $item);
+                    if (basename($item)!='docker-compose.yml') {
+                        foreach ($this->parameters as $key => $value) {
+                            $localContent = str_replace('${' . $key . '}', $value, $localContent);
+                        }
+                    }
+                    file_put_contents($tmpfile2, $localContent);
+
+
+                    $process = new Process('colordiff -U3 -w ' . $tmpfile . ' ' . $tmpfile2);
                     $process->run();
                     echo $process->getOutput();
                     echo $process->getErrorOutput();

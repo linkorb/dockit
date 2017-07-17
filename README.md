@@ -12,7 +12,7 @@ It works like this:
 Dockit will:
 
 1. Create a remote directory for each deployment on the specified host
-2. Copy all of the app's dependencies (config files, etc) into the remote app path
+2. Copy all of the app's dependencies (config files, etc) into the remote app path (replacing variables where applicable)
 3. Generate a `.env` file based on the deployment configuration
 4. (optionally) create an nginx vhost
 5. run `docker-compose up` on the new deployment
@@ -32,6 +32,17 @@ Run `dockit show` to show the current configuration, and list all apps and deplo
 Before running a new `deployment:install`, you can check the differences that are going to be applied
 using the `deployment:diff` command.
 This command uses the `colordiff` CLI command, which needs to be installed through your package manager (i.e. `brew install colordiff`, `apt-get install colordiff`, etc)
+
+## Variables and template files
+
+When dockit copies the local files over to the remote host with `dockit deployment:install`,
+variables in those files are automatically replaced with their deployment-specific values.
+
+The format of the values are the same as used in the `docker-compose.yml` files:
+
+    ${THIS_IS_A_VARIABLE}
+
+Using the `dockit deployment:diff` command will pre-apply the variables before comparing the local and remote files, so the local variables don't show up as diffs against the remote replaced variable values.
 
 ## Examples
 
